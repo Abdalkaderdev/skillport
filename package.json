@@ -1,0 +1,35 @@
+{
+  "name": "skillport",
+  "version": "0.1.0",
+  "description": "See, lint, sync and convert agent skills across Claude Code, Codex, Gemini CLI and Cursor",
+  "keywords": ["claude-code", "codex", "gemini-cli", "cursor", "agent-skills", "skill-md", "cli"],
+  "license": "MIT",
+  "author": "abdalkaderdev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abdalkaderdev/skillport.git"
+  },
+  "homepage": "https://github.com/Abdalkaderdev/skillport#readme",
+  "bugs": "https://github.com/Abdalkaderdev/skillport/issues",
+  "type": "module",
+  "bin": {
+    "skillport": "dist/bin.js"
+  },
+  "files": ["dist"],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test \"src/**/*.test.ts\"",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build"
+  },
+  "dependencies": {
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.1",
+    "typescript": "^7.0.2"
+  }
+}
