@@ -1,5 +1,5 @@
 {
-  "name": "skillport",
+  "name": "@abdalkaderdev/skillport",
   "version": "0.1.0",
   "description": "See, lint, sync and convert agent skills across Claude Code, Codex, Gemini CLI and Cursor",
   "keywords": ["claude-code", "codex", "gemini-cli", "cursor", "agent-skills", "skill-md", "cli"],

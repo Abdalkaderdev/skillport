@@ -1,13 +1,13 @@
 # skillport
 
 [![CI](https://github.com/Abdalkaderdev/skillport/actions/workflows/ci.yml/badge.svg)](https://github.com/Abdalkaderdev/skillport/actions/workflows/ci.yml)
-[![npm](https://img.shields.io/npm/v/skillport)](https://www.npmjs.com/package/skillport)
+[![npm](https://img.shields.io/npm/v/@abdalkaderdev/skillport)](https://www.npmjs.com/package/@abdalkaderdev/skillport)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 See, lint, sync and convert agent skills across Claude Code, Codex, Gemini CLI and Cursor.
 
 ```sh
-npx skillport lint
+npx @abdalkaderdev/skillport lint
 ```
 
 ## Why
@@ -34,10 +34,10 @@ skillport reads every agent's skills in one pass, reports these, and copies skil
 ## Quick start
 
 ```sh
-npx skillport list
-npx skillport lint
-npx skillport sync claude cursor
-npx skillport sync claude cursor --apply
+npx @abdalkaderdev/skillport list
+npx @abdalkaderdev/skillport lint
+npx @abdalkaderdev/skillport sync claude cursor
+npx @abdalkaderdev/skillport sync claude cursor --apply
 ```
 
 ## Commands
@@ -47,7 +47,7 @@ npx skillport sync claude cursor --apply
 Every skill, which agents have it, and whether copies drifted.
 
 ```
-$ npx skillport list
+$ npx @abdalkaderdev/skillport list
 name                   claude agents gemini cursor notes
 3d-web-experience      link   yes    -      -
 cloudflare             yes    -      yes    yes
@@ -62,7 +62,7 @@ writing-plans          -      -      yes    -
 ### `lint`
 
 ```
-$ npx skillport lint
+$ npx @abdalkaderdev/skillport lint
 error  claude/directing-stickman-videos  invalid YAML: Nested mappings are not allowed in compact mappings
 warn   claude/ckm-brand  name "ckm:brand" does not match folder "ckm-brand"
 warn   claude/sentry-react-sdk  description overlaps "sentry-svelte-sdk" (54%), they may trigger on the same requests
@@ -89,7 +89,7 @@ Exits 1 when there are errors, so it works in CI and pre-commit hooks.
 Copy skills one agent has and another doesn't.
 
 ```
-$ npx skillport sync claude cursor
+$ npx @abdalkaderdev/skillport sync claude cursor
 new        3d-web-experience
 new        academic-researcher
 ...
@@ -109,8 +109,8 @@ Dry run. Re-run with --apply to copy.
 Copy one skill into another agent, or export it anywhere.
 
 ```sh
-npx skillport convert frontend-design --to cursor
-npx skillport convert frontend-design --out ./my-repo/.agents/skills
+npx @abdalkaderdev/skillport convert frontend-design --to cursor
+npx @abdalkaderdev/skillport convert frontend-design --out ./my-repo/.agents/skills
 ```
 
 Claude Code supports extra frontmatter keys (`disable-model-invocation`, `argument-hint`, `model`, ...) the other agents don't. When converting to anything but `claude`, skillport keeps only spec keys (`name`, `description`, `license`, `compatibility`, `metadata`, `allowed-tools`) and prints what it dropped.
@@ -132,8 +132,9 @@ Only user-level skills for now. Plugin-bundled skills are not scanned.
 Requires Node 22+.
 
 ```sh
-npx skillport <command>
-npm i -g skillport
+npx @abdalkaderdev/skillport <command>
+npm i -g @abdalkaderdev/skillport
+skillport <command>
 ```
 
 ## How it works
