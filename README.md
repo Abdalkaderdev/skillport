@@ -2,13 +2,42 @@
 
 [![CI](https://github.com/Abdalkaderdev/skillport/actions/workflows/ci.yml/badge.svg)](https://github.com/Abdalkaderdev/skillport/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/skillport)](https://www.npmjs.com/package/skillport)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 See, lint, sync and convert agent skills across Claude Code, Codex, Gemini CLI and Cursor.
 
-All four agents read the same `SKILL.md` folder format, but each keeps its own directory. After a few installs you end up with hundreds of skills, copies that drifted apart, broken frontmatter nobody noticed, and more descriptions than the agent can fit in its prompt. skillport shows you what you have and fixes it.
-
 ```sh
 npx skillport lint
+```
+
+## Why
+
+All four agents read the same `SKILL.md` folder format, but each keeps its own directory. After a few installs you have hundreds of skills spread across `~/.claude`, `~/.agents`, `~/.gemini` and `~/.cursor`, and problems you can't see:
+
+- copies of the same skill that drifted apart
+- frontmatter that fails to parse, so the agent silently ignores the skill
+- two skills with near-identical descriptions competing for the same request
+- more skill descriptions than the agent can fit in its prompt; Codex caps its skill list at about 8000 characters and drops the rest
+
+skillport reads every agent's skills in one pass, reports these, and copies skills between agents without clobbering anything.
+
+## Features
+
+- One view of every skill across five locations, with symlinks and drift marked
+- Spec checks against the [Agent Skills specification](https://agentskills.io/specification)
+- Trigger-overlap detection and per-skill token cost
+- Safe sync: dry run by default, conflicts skipped, symlinks untouched
+- Format conversion that strips Claude-only frontmatter for other agents
+- JSON output and CI-friendly exit codes
+- One runtime dependency, no config file
+
+## Quick start
+
+```sh
+npx skillport list
+npx skillport lint
+npx skillport sync claude cursor
+npx skillport sync claude cursor --apply
 ```
 
 ## Commands
@@ -107,15 +136,53 @@ npx skillport <command>
 npm i -g skillport
 ```
 
-## Development
+## How it works
+
+Each agent is a row in a table of directories (`src/skills.ts`). skillport scans those directories for folders containing `SKILL.md`, parses the YAML frontmatter, and runs every command against that one list. Adding an agent means adding a row.
+
+## FAQ
+
+**Does it modify anything without asking?**
+No. `list`, `lint` and `sync` without `--apply` are read-only. `convert` writes one folder and refuses to overwrite a different copy without `--force`.
+
+**My `~/.claude/skills` entries are symlinks into `~/.agents/skills`. Will sync break them?**
+No. Symlinked targets are reported as `linked` and skipped, even with `--force`.
+
+**Why does lint warn about Codex when I mostly use Claude Code?**
+The warning is on `~/.agents/skills`, which Codex and Gemini CLI read. If you don't use them, ignore it or run `lint --agent claude`.
+
+**Is the overlap check accurate?**
+It compares description word sets (Jaccard similarity, threshold 0.5). It catches near-duplicates like per-framework variants of the same skill. Treat it as a hint.
+
+**Where are project-level skills (`.claude/skills` in a repo)?**
+Not scanned yet. See roadmap.
+
+## Roadmap
+
+- project-level skill directories
+- skills bundled inside Claude Code plugins
+- `lint --fix` for name and frontmatter issues
+- `diff <skill>` between two agents' copies
+- install skills from a GitHub repo
+
+## Contributing
+
+Issues and PRs are welcome. For a new agent or directory, include where the agent documents it.
 
 ```sh
+git clone https://github.com/Abdalkaderdev/skillport
+cd skillport
 npm install
 npm test
-npm run build
 node src/bin.ts list
 ```
 
+Tests run against a temporary home directory and never touch your real skills.
+
 ## License
 
-MIT
+[MIT](LICENSE)
+
+## Author
+
+Abdalkader Alhamoud · [abdalkader.dev](https://abdalkader.dev) · [@Abdalkaderdev](https://github.com/Abdalkaderdev)
