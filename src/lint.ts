@@ -65,7 +65,7 @@ export function lint(skills: Skill[], overlapThreshold = 0.5): Issue[] {
         level: "warn",
         agent,
         skill: "*",
-        message: `${list.length} skills use ${listChars} chars of name+description; Codex lists at most ~${CODEX_LIST_BUDGET} and will shorten or drop some`,
+        message: `${list.length} skills use ${listChars} chars of name+description; Codex's default budget is ~${CODEX_LIST_BUDGET} and it shortens or drops descriptions past that`,
       });
     }
   }

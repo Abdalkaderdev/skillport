@@ -105,7 +105,7 @@ export function run(argv: string[], home = homedir(), out = console.log): number
 
     case "convert": {
       const [name] = args;
-      if (!name || (!values.to && !values.out)) throw new Error("usage: skillport convert <skill> (--to <id> | --out <dir>) [--from <id>]");
+      if (!name || (!values.to && !values.out)) throw new Error("usage: skillport convert <skill> (--to <id> | --out <dir>) [--from <id>] [--force]");
       const sources = scanAll(home, values.from ? [getAgent(values.from)] : AGENTS);
       const skill: Skill | undefined = sources.find((s) => s.slug === name || skillName(s) === name);
       if (!skill) throw new Error(`skill "${name}" not found`);

@@ -17,7 +17,7 @@ All four agents read the same `SKILL.md` folder format, but each keeps its own d
 - copies of the same skill that drifted apart
 - frontmatter that fails to parse, so the agent silently ignores the skill
 - two skills with near-identical descriptions competing for the same request
-- more skill descriptions than the agent can fit in its prompt; Codex caps its skill list at about 8000 characters and drops the rest
+- more skill descriptions than the agent can fit in its prompt; Codex budgets its skill list at about 8000 characters by default (2% of the context window when it knows the model) and shortens or drops descriptions past that
 
 skillport reads every agent's skills in one pass, reports these, and copies skills between agents without clobbering anything.
 
@@ -66,7 +66,7 @@ $ npx @abdalkaderdev/skillport lint
 error  claude/directing-stickman-videos  invalid YAML: Nested mappings are not allowed in compact mappings
 warn   claude/ckm-brand  name "ckm:brand" does not match folder "ckm-brand"
 warn   claude/sentry-react-sdk  description overlaps "sentry-svelte-sdk" (54%), they may trigger on the same requests
-warn   agents/*  218 skills use 77259 chars of name+description; Codex lists at most ~8000 and will shorten or drop some
+warn   agents/*  218 skills use 77259 chars of name+description; Codex's default budget is ~8000 and it shortens or drops descriptions past that
 
 Heaviest skills (approx tokens when loaded):
    22083  claude/design-taste-frontend

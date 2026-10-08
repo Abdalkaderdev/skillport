@@ -40,5 +40,5 @@ keys are reported. Source symlinks are copied as real files.
 
 ## Stack
 
-TypeScript, Node ≥20, one runtime dependency (`yaml`), `node:util` parseArgs,
+TypeScript, Node ≥22, one runtime dependency (`yaml`), `node:util` parseArgs,
 `node:test`. Every function takes `home` so tests run against a temp dir.
