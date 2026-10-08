@@ -126,6 +126,12 @@ test("sync and convert copy a symlinked source as real files", () => {
   assert.match(readFileSync(join(home, ".agents/skills/linked/SKILL.md"), "utf8"), /name: linked/);
 });
 
+test("list treats a converted copy as in sync", () => {
+  skill(".claude/skills", "tool", "name: tool\ndescription: x\nargument-hint: <file>");
+  cli("convert", "tool", "--to", "cursor");
+  assert.doesNotMatch(cli("list").text, /copies differ/);
+});
+
 test("a failed overwrite leaves the existing copy in place", () => {
   const src = skill(".claude/skills", "tool", "name: tool\ndescription: new");
   skill(".claude/skills/tool/nested", "tool", "name: tool\ndescription: old");

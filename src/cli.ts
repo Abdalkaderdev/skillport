@@ -2,7 +2,7 @@ import { createRequire } from "node:module";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
-import { copySkill, plan, type Action } from "./copy.ts";
+import { copySkill, plan, render, type Action } from "./copy.ts";
 import { heaviest, lint } from "./lint.ts";
 import { AGENTS, getAgent, scanAgent, scanAll, skillName, type Skill } from "./skills.ts";
 
@@ -59,7 +59,7 @@ export function run(argv: string[], home = homedir(), out = console.log): number
           return (s ? (s.link ? "link" : "yes") : "-").padEnd(7);
         });
         const real = copies.filter((c) => !c.link);
-        const differs = new Set(real.map((c) => c.raw.replace(/\r\n/g, "\n"))).size > 1;
+        const differs = new Set(real.map((c) => render(c, "agents").text.replace(/\r\n/g, "\n"))).size > 1;
         out(`${name.padEnd(width)}  ${cells.join("")}${differs ? "copies differ" : ""}`);
       }
       out(`\n${byName.size} skills. ${present.map((a) => `${a.id}: ${skills.filter((s) => s.agent === a.id).length}`).join(", ")}`);
