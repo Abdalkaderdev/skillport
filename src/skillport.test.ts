@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, symlinkSync, writeFileSync } from "node:fs";
+import { existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { beforeEach, test } from "node:test";
@@ -110,4 +110,26 @@ test("an untouched copy with claude-only keys is in sync, not a conflict", () =>
   skill(".claude/skills", "same", fm);
   skill(".cursor/skills", "same", fm);
   assert.match(cli("sync", "claude", "cursor").text, /1 already in sync/);
+});
+
+test("sync and convert copy a symlinked source as real files", () => {
+  const real = skill("elsewhere", "linked", "name: linked\ndescription: x", { "scripts/run.sh": "echo hi" });
+  mkdirSync(join(home, ".claude/skills"), { recursive: true });
+  symlinkSync(real, join(home, ".claude/skills/linked"), "junction");
+
+  const out = cli("sync", "claude", "cursor", "--apply");
+  assert.match(out.text, /new\s+linked/);
+  assert.equal(readFileSync(join(home, ".cursor/skills/linked/scripts/run.sh"), "utf8"), "echo hi");
+  assert.equal(lstatSync(join(home, ".cursor/skills/linked")).isSymbolicLink(), false);
+
+  assert.equal(cli("convert", "linked", "--to", "agents").code, 0);
+  assert.match(readFileSync(join(home, ".agents/skills/linked/SKILL.md"), "utf8"), /name: linked/);
+});
+
+test("a failed overwrite leaves the existing copy in place", () => {
+  const src = skill(".claude/skills", "tool", "name: tool\ndescription: new");
+  skill(".claude/skills/tool/nested", "tool", "name: tool\ndescription: old");
+  const out = join(src, "nested");
+  assert.throws(() => cli("convert", "tool", "--from", "claude", "--out", out, "--force"));
+  assert.match(readFileSync(join(out, "tool/SKILL.md"), "utf8"), /old/);
 });

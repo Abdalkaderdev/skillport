@@ -1,5 +1,5 @@
-import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { stringify } from "yaml";
 import type { Skill } from "./skills.ts";
 
@@ -30,10 +30,18 @@ export function plan(skill: Skill, destDir: string, target: string, force: boole
 }
 
 export function copySkill(skill: Skill, destDir: string, target: string): string[] {
-  rmSync(destDir, { recursive: true, force: true });
-  mkdirSync(destDir, { recursive: true });
-  cpSync(skill.dir, destDir, { recursive: true, dereference: true });
-  const { text, dropped } = render(skill, target);
-  writeFileSync(join(destDir, "SKILL.md"), text);
-  return dropped;
+  const tmp = `${destDir}.skillport-tmp`;
+  rmSync(tmp, { recursive: true, force: true });
+  mkdirSync(dirname(destDir), { recursive: true });
+  try {
+    cpSync(realpathSync(skill.dir), tmp, { recursive: true, dereference: true });
+    const { text, dropped } = render(skill, target);
+    writeFileSync(join(tmp, "SKILL.md"), text);
+    rmSync(destDir, { recursive: true, force: true });
+    renameSync(tmp, destDir);
+    return dropped;
+  } catch (e) {
+    rmSync(tmp, { recursive: true, force: true });
+    throw e;
+  }
 }
