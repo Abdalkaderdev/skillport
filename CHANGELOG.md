@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+
+- `convert --out` into the skill's own folder is refused instead of recursing on macOS
+
 ## 0.1.1
 
 - `sync` and `convert` copy a symlinked or junctioned source instead of crashing on Windows

@@ -144,6 +144,6 @@ test("a failed overwrite leaves the existing copy in place", () => {
   const src = skill(".claude/skills", "tool", "name: tool\ndescription: new");
   skill(".claude/skills/tool/nested", "tool", "name: tool\ndescription: old");
   const out = join(src, "nested");
-  assert.throws(() => cli("convert", "tool", "--from", "claude", "--out", out, "--force"));
+  assert.throws(() => cli("convert", "tool", "--from", "claude", "--out", out, "--force"), /into its own folder/);
   assert.match(readFileSync(join(out, "tool/SKILL.md"), "utf8"), /old/);
 });

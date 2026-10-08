@@ -1,8 +1,16 @@
 {
   "name": "@abdalkaderdev/skillport",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "See, lint, sync and convert agent skills across Claude Code, Codex, Gemini CLI and Cursor",
-  "keywords": ["claude-code", "codex", "gemini-cli", "cursor", "agent-skills", "skill-md", "cli"],
+  "keywords": [
+    "claude-code",
+    "codex",
+    "gemini-cli",
+    "cursor",
+    "agent-skills",
+    "skill-md",
+    "cli"
+  ],
   "license": "MIT",
   "author": "abdalkaderdev",
   "repository": {
@@ -15,7 +23,9 @@
   "bin": {
     "skillport": "dist/bin.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "engines": {
     "node": ">=22"
   },
