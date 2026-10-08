@@ -132,6 +132,14 @@ test("list treats a converted copy as in sync", () => {
   assert.doesNotMatch(cli("list").text, /copies differ/);
 });
 
+test("lint does not report a duplicate as overlapping itself", () => {
+  skill(".gemini/skills", "dup", "name: dup\ndescription: same words here");
+  skill(".gemini/extensions/e/skills", "dup", "name: dup\ndescription: same words here");
+  const messages = lint(scanAll(home)).map((i) => i.message);
+  assert.ok(messages.some((m) => m.startsWith('name "dup" used 2 times')));
+  assert.ok(!messages.some((m) => m.includes("overlaps")));
+});
+
 test("a failed overwrite leaves the existing copy in place", () => {
   const src = skill(".claude/skills", "tool", "name: tool\ndescription: new");
   skill(".claude/skills/tool/nested", "tool", "name: tool\ndescription: old");

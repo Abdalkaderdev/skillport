@@ -51,6 +51,7 @@ export function lint(skills: Skill[], overlapThreshold = 0.5): Issue[] {
     const sets = list.map((s) => words(description(s)));
     for (let i = 0; i < list.length; i++) {
       for (let j = i + 1; j < list.length; j++) {
+        if (skillName(list[i]) === skillName(list[j])) continue;
         const score = similarity(sets[i], sets[j]);
         if (score >= overlapThreshold) {
           add("warn", list[i], `description overlaps "${list[j].slug}" (${Math.round(score * 100)}%), they may trigger on the same requests`);
